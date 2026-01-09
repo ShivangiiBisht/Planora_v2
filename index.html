@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Planner</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-top">
+                <div>
+                    <h1 class="title">Study Planner</h1>
+                    <p class="subtitle">Organize, track, and excel in your studies</p>
+                </div>
+                
+                <div class="header-buttons">
+                    <a href="pomodoro.html" class="btn-primary">
+                        <span class="ping-indicator">
+                            <span class="ping-animation"></span>
+                            <span class="ping-dot"></span>
+                        </span>
+                        Pomodoro Timer
+                        <span class="arrow">→</span>
+                    </a>
+                    <a href="calendar.html" class="btn-primary">
+                        <span class="ping-indicator">
+                            <span class="ping-animation"></span>
+                            <span class="ping-dot"></span>
+                        </span>
+                        Calendar
+                        <span class="arrow">→</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon">📚</div>
+                        <h3>Total Tasks</h3>
+                    </div>
+                    <p class="stat-value" id="totalTasks">0</p>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon">✅</div>
+                        <h3>Completed</h3>
+                    </div>
+                    <p class="stat-value stat-completed" id="completedTasks">0</p>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon">⏱️</div>
+                        <h3>Study Hours</h3>
+                    </div>
+                    <p class="stat-value stat-hours" id="studyHours">0.0h</p>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon">📊</div>
+                        <h3>Sessions</h3>
+                    </div>
+                    <p class="stat-value stat-sessions" id="totalSessions">0</p>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="tasks">
+                    <span class="tab-content">
+                        <span class="tab-icon">📝</span>
+                        Tasks & Assignments
+                    </span>
+                </button>
+                <button class="tab-btn" data-tab="sessions">
+                    <span class="tab-content">
+                        <span class="tab-icon">📊</span>
+                        Study Sessions
+                    </span>
+                </button>
+            </div>
+
+            <!-- Tasks Tab -->
+            <div id="tasksTab" class="tab-pane active">
+                <div class="tab-header">
+                    <div>
+                        <h2>Your Study Tasks</h2>
+                        <p class="tab-description">Manage assignments, readings, and study materials</p>
+                    </div>
+                    <button class="btn-add" id="addTaskBtn">
+                        <span>+</span>
+                        Add New Task
+                    </button>
+                </div>
+
+                <div id="taskForm" class="form-container hidden">
+                    <form id="taskFormElement">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>
+                                    <span>📝</span>
+                                    Task Title *
+                                </label>
+                                <input type="text" id="taskTitle" placeholder="e.g., Complete Math assignment chapter 5" required>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <span>🎯</span>
+                                    Subject *
+                                </label>
+                                <input type="text" id="taskSubject" placeholder="e.g., Mathematics, Physics, etc." required>
+                            </div>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>
+                                    <span>📅</span>
+                                    Due Date *
+                                </label>
+                                <input type="date" id="taskDueDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <span>⚡</span>
+                                    Priority
+                                </label>
+                                <select id="taskPriority">
+                                    <option value="low">Low Priority</option>
+                                    <option value="medium" selected>Medium Priority</option>
+                                    <option value="high">High Priority</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <span>📋</span>
+                                Notes (Optional)
+                            </label>
+                            <textarea id="taskNotes" rows="3" placeholder="Add additional details, instructions, or links..."></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn-submit">Add Task</button>
+                            <button type="button" class="btn-cancel" id="cancelTaskBtn">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="tasksList" class="items-list"></div>
+            </div>
+
+            <!-- Sessions Tab -->
+            <div id="sessionsTab" class="tab-pane">
+                <div class="tab-header">
+                    <div>
+                        <h2>Study Sessions</h2>
+                        <p class="tab-description">Track your study time and progress</p>
+                    </div>
+                    <button class="btn-add-session" id="addSessionBtn">
+                        <span>+</span>
+                        Log Session
+                    </button>
+                </div>
+
+                <div id="sessionForm" class="form-container hidden">
+                    <form id="sessionFormElement">
+                        <div class="form-grid-3">
+                            <div class="form-group">
+                                <label>
+                                    <span>📚</span>
+                                    Subject *
+                                </label>
+                                <input type="text" id="sessionSubject" placeholder="e.g., Physics, Calculus, etc." required>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <span>⏱️</span>
+                                    Duration (minutes) *
+                                </label>
+                                <input type="number" id="sessionDuration" placeholder="e.g., 45, 60, 90" min="1" required>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <span>📅</span>
+                                    Date *
+                                </label>
+                                <input type="date" id="sessionDate" required>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn-submit-session">Log Session</button>
+                            <button type="button" class="btn-cancel" id="cancelSessionBtn">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="sessionsList" class="items-list"></div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
