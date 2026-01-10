@@ -31,20 +31,17 @@ function renderCalendar() {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
     
-    // Update month display
     currentMonthDisplay.textContent = new Date(year, month).toLocaleDateString('en-US', { 
         month: 'long', 
         year: 'numeric' 
     });
     
-    // Get first day of month and number of days
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const daysInPrevMonth = new Date(year, month, 0).getDate();
     
     calendarGrid.innerHTML = '';
     
-    // Add day headers
     const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     dayHeaders.forEach(day => {
         const header = document.createElement('div');
@@ -56,28 +53,25 @@ function renderCalendar() {
         calendarGrid.appendChild(header);
     });
     
-    // Add previous month days
     for (let i = firstDay - 1; i >= 0; i--) {
         const day = daysInPrevMonth - i;
-        const dayElement = createDayElement(day, month - 1, year, true);
-        calendarGrid.appendChild(dayElement);
+        calendarGrid.appendChild(createDayElement(day, month - 1, year, true));
     }
     
-    // Add current month days
     const today = new Date();
     for (let day = 1; day <= daysInMonth; day++) {
-        const isToday = day === today.getDate() && 
-                       month === today.getMonth() && 
-                       year === today.getFullYear();
-        const dayElement = createDayElement(day, month, year, false, isToday);
-        calendarGrid.appendChild(dayElement);
+        const isToday =
+            day === today.getDate() &&
+            month === today.getMonth() &&
+            year === today.getFullYear();
+        calendarGrid.appendChild(
+            createDayElement(day, month, year, false, isToday)
+        );
     }
     
-    // Add next month days
-    const remainingDays = 42 - (firstDay + daysInMonth); // 6 weeks * 7 days
+    const remainingDays = 42 - (firstDay + daysInMonth);
     for (let day = 1; day <= remainingDays; day++) {
-        const dayElement = createDayElement(day, month + 1, year, true);
-        calendarGrid.appendChild(dayElement);
+        calendarGrid.appendChild(createDayElement(day, month + 1, year, true));
     }
 }
 
@@ -91,32 +85,37 @@ function createDayElement(day, month, year, isOtherMonth, isToday = false) {
     dayNumber.className = 'day-number';
     dayNumber.textContent = day;
     dayElement.appendChild(dayNumber);
+
+    /* ===== ADDITION START ===== */
+    const tasksContainer = document.createElement('div');
+    tasksContainer.className = 'day-tasks';
+    dayElement.appendChild(tasksContainer);
+    /* ===== ADDITION END ===== */
     
-    // Check for tasks and sessions on this date
     const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-    const hasTasks = tasks.some(task => task.dueDate === dateString);
-    const hasSessions = sessions.some(session => session.date === dateString);
     
-    if (hasTasks || hasSessions) {
-        const indicators = document.createElement('div');
-        indicators.className = 'day-indicators';
-        
-        if (hasTasks) {
-            const taskIndicator = document.createElement('div');
-            taskIndicator.className = 'indicator task';
-            indicators.appendChild(taskIndicator);
-        }
-        
-        if (hasSessions) {
-            const sessionIndicator = document.createElement('div');
-            sessionIndicator.className = 'indicator session';
-            indicators.appendChild(sessionIndicator);
-        }
-        
-        dayElement.appendChild(indicators);
+    const dayTasks = tasks.filter(task => task.dueDate === dateString);
+
+    /* ===== ADDITION START ===== */
+    dayTasks.slice(0, 3).forEach(task => {
+        const taskBlock = document.createElement('div');
+        taskBlock.className = 'task-block';
+        taskBlock.textContent = task.title;
+        taskBlock.title = task.title;
+        tasksContainer.appendChild(taskBlock);
+        if (task.priority) {
+    taskBlock.classList.add(`task-priority-${task.priority}`);
     }
+    });
+
+    if (dayTasks.length > 3) {
+        const more = document.createElement('div');
+        more.className = 'more-tasks';
+        more.textContent = `+${dayTasks.length - 3} more`;
+        tasksContainer.appendChild(more);
+    }
+    /* ===== ADDITION END ===== */
     
-    // Add click event to show details
     dayElement.addEventListener('click', () => {
         showDayDetails(dateString);
     });
