@@ -15,7 +15,15 @@ const taskFormElement = document.getElementById('taskFormElement');
 const sessionFormElement = document.getElementById('sessionFormElement');
 const cancelTaskBtn = document.getElementById('cancelTaskBtn');
 const cancelSessionBtn = document.getElementById('cancelSessionBtn');
+const themeToggle = document.getElementById('themeToggle');
+const themeIcon = document.getElementById('themeIcon');
+const currentTheme = localStorage.getItem('theme') || 'dark';
 
+// Apply theme on load
+if (currentTheme === 'light') {
+    document.body.classList.add('light-mode');
+    themeIcon.textContent = '☀️';
+}
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
     updateStats();
@@ -40,6 +48,21 @@ function setupEventListeners() {
     addSessionBtn.addEventListener('click', () => showForm(sessionForm));
     cancelSessionBtn.addEventListener('click', () => hideForm(sessionForm));
     sessionFormElement.addEventListener('submit', handleSessionSubmit);
+
+    // Theme Toggle Listener
+    themeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('light-mode');
+        
+        let theme = 'dark';
+        if (document.body.classList.contains('light-mode')) {
+            theme = 'light';
+            themeIcon.textContent = '☀️';
+        } else {
+            themeIcon.textContent = '🌙';
+        }
+        
+        localStorage.setItem('theme', theme);
+    });
 }
 
 // Tab switching
